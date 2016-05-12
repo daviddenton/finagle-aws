@@ -7,7 +7,7 @@ import org.scalatest.{FunSpec, ShouldMatchers}
 
 class AwsRequestDateTest extends FunSpec with ShouldMatchers {
 
-  private val date = AwsRequestDate(ZonedDateTime.of(2016, 1, 27, 15, 32, 50, 0, ZoneId.of("UTC")).toInstant)
+  private val date = AwsRequestDate(ZonedDateTime.of(2016, 12, 25, 7, 35, 49, 0, ZoneId.systemDefault()).toInstant)
 
   describe("AwsRequestDate") {
 
