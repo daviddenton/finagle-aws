@@ -3,7 +3,7 @@ package io.github.daviddenton.finagle.aws
 import java.time.{ZoneId, ZonedDateTime}
 
 import com.twitter.finagle.http.Request
-import io.github.daviddenton.aws.{AwsCredentialScope, AwsHmacSha256, AwsRequestDate, AwsStringToSign}
+import io.github.daviddenton.finagle.aws.AwsRequestDate
 import org.scalatest.{FunSpec, ShouldMatchers}
 
 class AwsStringToSignTest extends FunSpec with ShouldMatchers {

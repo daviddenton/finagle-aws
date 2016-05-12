@@ -1,4 +1,4 @@
-package io.github.daviddenton.aws
+package io.github.daviddenton.finagle.aws
 
 import java.nio.charset.StandardCharsets
 import javax.crypto.Mac

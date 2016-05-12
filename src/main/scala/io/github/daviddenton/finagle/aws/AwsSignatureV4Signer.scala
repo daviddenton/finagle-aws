@@ -1,9 +1,8 @@
-package io.github.daviddenton.aws
+package io.github.daviddenton.finagle.aws
 
 import java.io.UnsupportedEncodingException
 
-import io.github.daviddenton.aws.AwsHmacSha256.hmacSHA256
-import io.github.daviddenton.finagle.aws.AwsCanonicalRequest
+import io.github.daviddenton.finagle.aws.AwsHmacSha256.hmacSHA256
 
 case class AwsSignatureV4Signer(scope: AwsCredentialScope, credentials: AwsCredentials) {
 

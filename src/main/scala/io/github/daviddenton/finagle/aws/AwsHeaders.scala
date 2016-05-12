@@ -1,4 +1,4 @@
-package io.github.daviddenton.aws
+package io.github.daviddenton.finagle.aws
 
 object AwsHeaders {
   val DATE: String = "x-amz-date"

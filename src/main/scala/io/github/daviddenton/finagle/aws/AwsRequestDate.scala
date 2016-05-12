@@ -1,10 +1,10 @@
-package io.github.daviddenton.aws
+package io.github.daviddenton.finagle.aws
 
 import java.time.Instant
 import java.time.ZoneId.systemDefault
 import java.time.format.DateTimeFormatter
 
-import io.github.daviddenton.aws.AwsRequestDate._
+import io.github.daviddenton.finagle.aws.AwsRequestDate.{basicFormatter, fullFormatter}
 
 case class AwsRequestDate(value: Instant) {
   lazy val basic = basicFormatter.format(value)

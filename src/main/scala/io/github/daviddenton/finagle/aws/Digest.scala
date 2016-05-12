@@ -1,4 +1,4 @@
-package io.github.daviddenton.aws
+package io.github.daviddenton.finagle.aws
 
 import java.security.MessageDigest
 import java.util.Base64

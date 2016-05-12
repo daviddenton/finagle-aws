@@ -1,7 +1,6 @@
-package io.github.daviddenton.aws
+package io.github.daviddenton.finagle.aws
 
-import io.github.daviddenton.aws.AwsHmacSha256.hash
-import io.github.daviddenton.finagle.aws.AwsCanonicalRequest
+import io.github.daviddenton.finagle.aws.AwsHmacSha256.hash
 
 class AwsStringToSign(canonicalRequest: AwsCanonicalRequest, requestScope: AwsCredentialScope, requestDate: AwsRequestDate) {
   private val stringToSign =

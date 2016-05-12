@@ -3,7 +3,6 @@ package io.github.daviddenton.finagle.aws
 import java.net.URLEncoder
 
 import com.twitter.finagle.http.Request
-import io.github.daviddenton.aws.AwsHmacSha256
 
 case class AwsCanonicalRequest(request: Request) {
   val signedHeaders = signHeaders(request)
