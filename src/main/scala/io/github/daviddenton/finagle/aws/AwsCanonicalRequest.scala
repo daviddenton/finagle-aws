@@ -6,12 +6,13 @@ import com.twitter.finagle.http.Request
 
 case class AwsCanonicalRequest(request: Request) {
   val signedHeaders = signHeaders(request)
+  val payloadHash = hashPayload(request)
   private val canonical = request.method + "\n" +
     request.path + "\n" +
     canonicalQueryString(request) + "\n" +
     canonicalHeaders(request) + "\n\n" +
     signedHeaders + "\n" +
-    payloadHash(request)
+    payloadHash
 
   private def signHeaders(request: Request) =
     request.headerMap.map(header => header._1.toLowerCase()).toSeq.sortBy(identity).mkString(";")
@@ -26,7 +27,7 @@ case class AwsCanonicalRequest(request: Request) {
     .sortBy(identity)
     .mkString("&")
 
-  private def payloadHash(request: Request) = AwsHmacSha256.hash(request.contentString.getBytes())
+  private def hashPayload(request: Request) = AwsHmacSha256.hash(request.contentString.getBytes())
 
   override def toString = canonical
 }
