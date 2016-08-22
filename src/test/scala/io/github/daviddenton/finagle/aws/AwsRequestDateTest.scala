@@ -1,7 +1,7 @@
 package io.github.daviddenton.finagle.aws
 
 import java.time.{ZoneId, ZonedDateTime}
-import io.github.daviddenton.finagle.aws.AwsRequestDate
+
 import org.scalatest.{FunSpec, ShouldMatchers}
 
 class AwsRequestDateTest extends FunSpec with ShouldMatchers {

@@ -15,7 +15,7 @@ class AwsCredentialFilterTest extends FunSpec with ShouldMatchers {
   private val clock = Clock.fixed(Instant.ofEpochMilli(0), ZoneId.systemDefault())
 
   private val filter = AwsCredentialFilter("somehost", clock,
-    AwsSignatureV4Signer(AwsCredentialScope("us-east", "s3"), AwsCredentials("access", "secret")))
+    AwsSignatureV4Signer(AwsCredentialScope(AwsRegion("us-east"), AwsService("s3")), AwsCredentials("access", "secret")))
 
   private val mirrorHeaders = Service.mk {
     req: Request =>
