@@ -4,6 +4,7 @@ import java.time.Clock
 
 import com.twitter.finagle.Filter
 import com.twitter.finagle.http.{Request, Response}
+import io.github.daviddenton.finagle.aws.AwsHeaders.DATE
 import org.jboss.netty.handler.codec.http.HttpHeaders.Names
 import org.jboss.netty.handler.codec.http.HttpHeaders.Names.{CONTENT_LENGTH, HOST}
 
@@ -13,7 +14,7 @@ object AwsCredentialFilter {
       val date = AwsRequestDate(clock.instant())
       req.headerMap(HOST) = host
       req.headerMap(CONTENT_LENGTH) = req.content.length.toString
-      req.headerMap(AwsHeaders.DATE) = date.full
+      req.headerMap(DATE) = date.full
 
       val canonicalRequest = AwsCanonicalRequest(req)
       req.headerMap(Names.AUTHORIZATION) = signer.authHeader(canonicalRequest, date)

@@ -17,6 +17,7 @@ scalacOptions += "-deprecation"
 scalacOptions += "-feature"
 
 libraryDependencies ++= Seq(
+  "org.scala-lang.modules" %% "scala-xml" % "1.0.6",
   "com.twitter" %% "finagle-http" % "6.42.0" % "provided",
   "org.scalatest" %% "scalatest" % "3.0.0" % "test")
 
