@@ -8,10 +8,11 @@ import com.twitter.finagle.{Http, Service}
 
 object S3 {
 
-  private val awsDomain = "s3.amazonaws.com:80"
+  private val awsDomain = "s3.amazonaws.com"
 
   def client(region: AwsRegion, credentials: AwsCredentials, clock: Clock = Clock.systemUTC(),
-             http: Service[Request, Response] = Http.newService(s"$awsDomain")): Service[Request, Response] = {
+             http: Service[Request, Response] = Http.client
+               .withTls(awsDomain).newService(s"$awsDomain:443")): Service[Request, Response] = {
     val signatureV4Signer = AwsSignatureV4Signer(AwsCredentialScope(region, AwsService("s3")), credentials)
 
     AwsCredentialFilter(awsDomain, clock, signatureV4Signer)
@@ -19,7 +20,7 @@ object S3 {
   }
 
   case class Bucket(name: String) extends AnyVal {
-    def toUri = URI.create(s"$name.s3.amazonaws.com")
+    def toUri = URI.create(s"https://$name.s3.amazonaws.com")
   }
 
   object Bucket {
@@ -28,8 +29,10 @@ object S3 {
       val signatureV4Signer = AwsSignatureV4Signer(AwsCredentialScope(region, AwsService("s3")), credentials)
       val authority = bucket.toUri.getAuthority
 
+      val http = Http.client.withTls(authority)
+        .newService(s"$authority:443")
       AwsCredentialFilter(authority, clock, signatureV4Signer)
-        .andThen(Http.newService(s"$authority:80"))
+        .andThen(http)
     }
 
     case class Key(value: String) extends AnyVal
