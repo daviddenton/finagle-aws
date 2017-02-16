@@ -7,20 +7,24 @@ import com.twitter.finagle.http.{Request, Response}
 import com.twitter.finagle.{Http, Service}
 
 object S3 {
-  def client(region: AwsRegion, credentials: AwsCredentials, clock: Clock = Clock.systemUTC()): Service[Request, Response] = {
-    val signatureV4Signer = AwsSignatureV4Signer(AwsCredentialScope(region, AwsService("s3")), credentials)
-    val authority = "s3.amazonaws.com"
 
-    AwsCredentialFilter(authority, clock, signatureV4Signer)
-      .andThen(Http.client.newService(s"$authority:80"))
+  private val awsDomain = "s3.amazonaws.com:80"
+
+  def client(region: AwsRegion, credentials: AwsCredentials, clock: Clock = Clock.systemUTC(),
+             http: Service[Request, Response] = Http.newService(s"$awsDomain:80")): Service[Request, Response] = {
+    val signatureV4Signer = AwsSignatureV4Signer(AwsCredentialScope(region, AwsService("s3")), credentials)
+
+    AwsCredentialFilter(awsDomain, clock, signatureV4Signer)
+      .andThen(http)
   }
 
   case class Bucket(name: String) extends AnyVal {
-    def toUri = URI.create(s"$name.s3.amazonaws.com")
+    def toUri = URI.create(s"$name.s3.amazonaws.com:80")
   }
 
   object Bucket {
-    def client(bucket: Bucket, region: AwsRegion, credentials: AwsCredentials, clock: Clock = Clock.systemUTC()): Service[Request, Response] = {
+    def client(bucket: Bucket, region: AwsRegion, credentials: AwsCredentials,
+               clock: Clock = Clock.systemUTC()): Service[Request, Response] = {
       val signatureV4Signer = AwsSignatureV4Signer(AwsCredentialScope(region, AwsService("s3")), credentials)
       val authority = bucket.toUri.getAuthority
 
@@ -29,5 +33,7 @@ object S3 {
     }
 
     case class Key(value: String) extends AnyVal
+
   }
+
 }

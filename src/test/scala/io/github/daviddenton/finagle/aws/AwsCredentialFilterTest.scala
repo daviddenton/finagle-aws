@@ -12,7 +12,7 @@ import org.scalatest.{FunSpec, Matchers}
 
 class AwsCredentialFilterTest extends FunSpec with Matchers {
 
-  private val clock = Clock.fixed(Instant.ofEpochMilli(0), ZoneId.systemDefault())
+  private val clock = Clock.fixed(Instant.ofEpochMilli(0), ZoneId.of("UTC"))
 
   private val filter = AwsCredentialFilter("somehost", clock,
     AwsSignatureV4Signer(AwsCredentialScope(AwsRegion.usEast, AwsService.s3), AwsCredentials("access", "secret")))
