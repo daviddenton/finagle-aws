@@ -11,7 +11,7 @@ object S3 {
   private val awsDomain = "s3.amazonaws.com:80"
 
   def client(region: AwsRegion, credentials: AwsCredentials, clock: Clock = Clock.systemUTC(),
-             http: Service[Request, Response] = Http.newService(s"$awsDomain:80")): Service[Request, Response] = {
+             http: Service[Request, Response] = Http.newService(s"$awsDomain")): Service[Request, Response] = {
     val signatureV4Signer = AwsSignatureV4Signer(AwsCredentialScope(region, AwsService("s3")), credentials)
 
     AwsCredentialFilter(awsDomain, clock, signatureV4Signer)
@@ -19,7 +19,7 @@ object S3 {
   }
 
   case class Bucket(name: String) extends AnyVal {
-    def toUri = URI.create(s"$name.s3.amazonaws.com:80")
+    def toUri = URI.create(s"$name.s3.amazonaws.com")
   }
 
   object Bucket {
