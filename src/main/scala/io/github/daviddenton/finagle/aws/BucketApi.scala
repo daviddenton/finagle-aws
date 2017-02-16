@@ -1,60 +1,62 @@
 package io.github.daviddenton.finagle.aws
 
-import java.net.URI
-import java.time.Clock
-
+import com.twitter.finagle.Service
+import com.twitter.finagle.http.Method.{Delete, Get}
+import com.twitter.finagle.http.Status.{NoContent, NotFound, Ok}
 import com.twitter.finagle.http.{Request, Response}
-import com.twitter.finagle.{Http, Service}
 import com.twitter.io.Buf
 import com.twitter.util.Future
 
+import scala.xml.XML
+
 trait BucketApi {
-  def keys(): Future[Seq[Key]]
+  def list(): Future[Seq[Key]]
 
   def apply(key: Key): Future[Option[Buf]]
 
-  def +=(pair: (Key, Buf)): Future[Option[Key]]
+  def +=(pair: (Key, Buf)): Future[Key]
 
   def -=(key: Key): Future[Option[Key]]
-
 }
+
 
 object BucketApi {
-//  def apply(bucket: Bucket, http: Service[Request, Response]): BucketApi = new BucketApi {
-//
-//    override def keys(): Future[Seq[Key]] = {
-//      val request = Request("/")
-//      request.headerMap("Accept", "application/json")
-//      http(request).map()
-//    }
-//
-//    override def apply(key: Key): Future[Option[Buf]] = ???
-//
-//    override def +=(pair: (Key, Buf)): Future[Option[Key]] = ???
-//
-//    override def -=(key: Key): Future[Option[Key]] = ???
-//  }
-//
-//  private val api = BucketApi()
-//  api -= Key("asd")
-}
+  def apply(bucket: Bucket, client: Service[Request, Response]): BucketApi = new BucketApi {
 
+    override def list(): Future[Seq[Key]] =
+      client(Request(Get, "/")).map(_.contentString).map(XML.loadString).map(S3.keys)
 
-case class Key(value: String) extends AnyVal
+    override def apply(key: Key): Future[Option[Buf]] =
+      client(Request(Get, "/" + key.value)).flatMap {
+        rsp =>
+          rsp.status match {
+            case Ok => Future(Option(rsp.content))
+            case NotFound => Future(None)
+            case _ => Future.exception(new IllegalArgumentException("AWS returned " + rsp.status))
+          }
+      }
 
-case class Bucket(name: String) extends AnyVal {
-  def toUri = URI.create(s"https://$name.s3.amazonaws.com")
-}
+    override def +=(keyAndContent: (Key, Buf)): Future[Key] = {
+      val (key, content) = keyAndContent
+      val request = Request(Get, "/" + key.value)
+      request.content = content
+      client(request).flatMap {
+        rsp =>
+          rsp.status match {
+            case Ok => Future(key)
+            case _ => Future.exception(new IllegalArgumentException("AWS returned " + rsp.status))
+          }
+      }
+    }
 
-object Bucket {
-  def client(bucket: Bucket, region: AwsRegion, credentials: AwsCredentials,
-             clock: Clock = Clock.systemUTC()): Service[Request, Response] = {
-    val signatureV4Signer = AwsSignatureV4Signer(AwsCredentialScope(region, AwsService("s3")), credentials)
-    val authority = bucket.toUri.getAuthority
-
-    val http = Http.client.withTls(authority)
-      .newService(s"$authority:443")
-    AwsCredentialFilter(authority, clock, signatureV4Signer)
-      .andThen(http)
+    override def -=(key: Key): Future[Option[Key]] =
+      client(Request(Delete, "/" + key.value)).flatMap {
+        rsp =>
+          rsp.status match {
+            case NoContent => Future(Option(key))
+            case NotFound => Future(None)
+            case _ => Future.exception(new IllegalArgumentException("AWS returned " + rsp.status))
+          }
+      }
   }
 }

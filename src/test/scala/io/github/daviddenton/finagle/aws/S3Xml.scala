@@ -8,7 +8,7 @@ object S3Xml {
       <CreationDate>2016-10-14T09:16:04.000Z</CreationDate>
     </Bucket>
 
-  def allBuckets(buckets: Bucket*) =
+  def listBuckets(buckets: Bucket*) =
     <ListAllMyBucketsResult xmlns="http://s3.amazonaws.com/doc/2006-03-01/">
       <Owner>
         <ID>25f3c384e613858c3d5bc830d0208aa3c7d2b62161c5fab525f8437ef2425e6a</ID>

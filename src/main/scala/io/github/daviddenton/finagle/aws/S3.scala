@@ -5,6 +5,8 @@ import java.time.Clock
 import com.twitter.finagle.http.{Request, Response}
 import com.twitter.finagle.{Http, Service}
 
+import scala.xml.Elem
+
 object S3 {
 
   private val awsDomain = "s3.amazonaws.com"
@@ -18,4 +20,9 @@ object S3 {
       .andThen(http)
   }
 
+  def buckets(elem: Elem): Seq[Bucket] = {
+    (elem \\ "ListAllMyBucketsResult" \ "Buckets" \ "Bucket" \ "Name").map(_.text).map(Bucket(_))
+  }
+
+  def keys(elem: Elem): Seq[Key] = (elem \\ "ListBucketResult" \ "Contents" \ "Key").map(_.text).map(Key)
 }
