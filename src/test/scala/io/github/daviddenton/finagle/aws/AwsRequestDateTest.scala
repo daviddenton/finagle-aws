@@ -2,9 +2,9 @@ package io.github.daviddenton.finagle.aws
 
 import java.time.{ZoneId, ZonedDateTime}
 
-import org.scalatest.{FunSpec, ShouldMatchers}
+import org.scalatest.{FunSpec, Matchers}
 
-class AwsRequestDateTest extends FunSpec with ShouldMatchers {
+class AwsRequestDateTest extends FunSpec with Matchers {
 
   private val date = AwsRequestDate(ZonedDateTime.of(2016, 12, 25, 7, 35, 49, 0, ZoneId.systemDefault()).toInstant)
 

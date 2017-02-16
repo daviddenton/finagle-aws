@@ -1,9 +1,9 @@
 package io.github.daviddenton.finagle.aws
 
 import io.github.daviddenton.finagle.aws.AwsHmacSha256.{hex, hmacSHA256}
-import org.scalatest.{FunSpec, ShouldMatchers}
+import org.scalatest.{FunSpec, Matchers}
 
-class AwsHmacSha256Test extends FunSpec with ShouldMatchers {
+class AwsHmacSha256Test extends FunSpec with Matchers {
 
   describe("AwsHmacSha256") {
 

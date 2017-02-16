@@ -3,9 +3,9 @@ package io.github.daviddenton.finagle.aws
 import com.twitter.finagle.http.Method.{Get, Put}
 import com.twitter.finagle.http.Request
 import org.jboss.netty.handler.codec.http.QueryStringEncoder
-import org.scalatest.{FunSpec, ShouldMatchers}
+import org.scalatest.{FunSpec, Matchers}
 
-class AwsCanonicalRequestTest extends FunSpec with ShouldMatchers {
+class AwsCanonicalRequestTest extends FunSpec with Matchers {
 
   describe("AwsCanonicalRequest") {
 

@@ -8,14 +8,14 @@ import com.twitter.finagle.http.{Request, Response}
 import com.twitter.util.Await.result
 import com.twitter.util.Future
 import org.jboss.netty.handler.codec.http.HttpHeaders.Names
-import org.scalatest.{FunSpec, ShouldMatchers}
+import org.scalatest.{FunSpec, Matchers}
 
-class AwsCredentialFilterTest extends FunSpec with ShouldMatchers {
+class AwsCredentialFilterTest extends FunSpec with Matchers {
 
   private val clock = Clock.fixed(Instant.ofEpochMilli(0), ZoneId.systemDefault())
 
   private val filter = AwsCredentialFilter("somehost", clock,
-    AwsSignatureV4Signer(AwsCredentialScope(AwsRegion("us-east"), AwsService("s3")), AwsCredentials("access", "secret")))
+    AwsSignatureV4Signer(AwsCredentialScope(AwsRegion.usEast, AwsService.s3), AwsCredentials("access", "secret")))
 
   private val mirrorHeaders = Service.mk {
     req: Request =>

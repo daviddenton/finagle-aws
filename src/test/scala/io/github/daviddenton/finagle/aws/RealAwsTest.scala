@@ -5,9 +5,9 @@ import java.util.UUID
 import com.twitter.finagle.http.Method.{Delete, Put}
 import com.twitter.finagle.http.Request
 import com.twitter.util.Await.result
-import org.scalatest.{FunSpec, ShouldMatchers}
+import org.scalatest.{FunSpec, Matchers}
 
-class RealAwsTest extends FunSpec with ShouldMatchers {
+class RealAwsTest extends FunSpec with Matchers {
 
   private val region = AwsRegion("")
   private val credentials = AwsCredentials("", "")

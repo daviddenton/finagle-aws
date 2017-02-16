@@ -1,4 +1,3 @@
-
 val orgName = "io.github.daviddenton"
 
 val projectName = "finagle-aws"
@@ -7,26 +6,28 @@ organization := orgName
 
 name := projectName
 
-description := "Finagle AWS support"
+description := "finagle aws"
 
-scalaVersion := "2.11.8"
+scalaVersion := "2.12.1"
+
+crossScalaVersions := Seq("2.12.1", "2.11.8")
 
 scalacOptions += "-deprecation"
 
 scalacOptions += "-feature"
 
 libraryDependencies ++= Seq(
-  "com.twitter" %% "finagle-http" % "6.35.0" % "provided",
-  "org.scalatest" %% "scalatest" % "2.2.4" % "test")
+  "com.twitter" %% "finagle-http" % "6.42.0" % "provided",
+  "org.scalatest" %% "scalatest" % "3.0.0" % "test")
 
 licenses +=("Apache-2.0", url("http://opensource.org/licenses/Apache-2.0"))
 
 pomExtra :=
-  <url>http://{projectName}.github.io/</url>
+  <url>http://github.com/daviddenton/finagle-aws</url>
     <scm>
-      <url>git@github.com:daviddenton/{projectName}.git</url>
-      <connection>scm:git:git@github.com:daviddenton/{projectName}.git</connection>
-      <developerConnection>scm:git:git@github.com:daviddenton/{projectName}.git</developerConnection>
+      <url>git@github.com:daviddenton/{projectName}.scala.git</url>
+      <connection>scm:git:git@github.com:daviddenton/{projectName}.scala.git</connection>
+      <developerConnection>scm:git:git@github.com:daviddenton/{projectName}.scala.git</developerConnection>
     </scm>
     <developers>
       <developer>
@@ -37,4 +38,7 @@ pomExtra :=
       </developer>
     </developers>
 
-Seq(bintraySettings: _*)
+bintrayOrganization := Some(orgName)
+
+credentials += Credentials(Path.userHome / ".sonatype" / ".credentials")
+
