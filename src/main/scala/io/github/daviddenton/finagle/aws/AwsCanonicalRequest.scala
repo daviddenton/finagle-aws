@@ -1,8 +1,9 @@
 package io.github.daviddenton.finagle.aws
 
-import java.net.URLEncoder
+import java.net.URLEncoder.encode
 
 import com.twitter.finagle.http.Request
+import io.github.daviddenton.finagle.aws.AwsHmacSha256.hash
 
 case class AwsCanonicalRequest(request: Request) {
   val signedHeaders = signHeaders(request)
@@ -23,11 +24,11 @@ case class AwsCanonicalRequest(request: Request) {
 
   private def canonicalQueryString(request: Request) = request.params
     .toSeq
-    .map(param => URLEncoder.encode(param._1, "UTF-8") + "=" + URLEncoder.encode(param._2, "UTF-8"))
+    .map(param => encode(param._1, "UTF-8") + "=" + encode(param._2, "UTF-8"))
     .sortBy(identity)
     .mkString("&")
 
-  private def hashPayload(request: Request) = AwsHmacSha256.hash(request.contentString.getBytes())
+  private def hashPayload(request: Request) = hash(request.contentString.getBytes())
 
   override def toString = canonical
 }
